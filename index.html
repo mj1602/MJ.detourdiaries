@@ -30,23 +30,6 @@
 </head>
 <body class="antialiased selection:bg-amber-500 selection:text-black pb-16">
 
-  <!-- Top Creator Admin Bar (For customizing affiliate URLs & deploying) -->
-  <div class="bg-amber-500/10 border-b border-amber-500/20 px-4 py-2.5">
-    <div class="max-w-lg mx-auto flex flex-wrap items-center justify-between gap-2 text-xs">
-      <span class="text-amber-300 font-medium flex items-center gap-1.5">
-        <span>⚡</span> Creator Mode: Customize your affiliate & Topmate links
-      </span>
-      <div class="flex items-center gap-2">
-        <button id="openAdminBtn" type="button" class="px-2.5 py-1 rounded-md bg-amber-500 text-slate-950 font-semibold hover:bg-amber-400 transition">
-          Edit My Links
-        </button>
-        <button id="openDeployBtn" type="button" class="px-2.5 py-1 rounded-md bg-white/10 text-white font-medium hover:bg-white/20 transition">
-          How to Publish Free
-        </button>
-      </div>
-    </div>
-  </div>
-
   <!-- Main Mobile Link-in-Bio Container -->
   <main class="max-w-lg mx-auto px-4 pt-6 space-y-5">
 
@@ -63,7 +46,7 @@
         </span>
       </div>
       <div>
-        <div class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-amber-500/15 border border-amber-400/30 text-amber-300 text-xs font-bold mb-1">
+        <div id="ownerSecretTrigger" title="@MJ.detourdiaries" class="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-amber-500/15 border border-amber-400/30 text-amber-300 text-xs font-bold mb-1 select-none cursor-pointer">
           <span>@MJ.detourdiaries</span>
         </div>
         <h1 class="text-xl font-extrabold tracking-tight text-white">
@@ -206,6 +189,28 @@
       </div>
     </section>
 
+    <!-- Passcode-Protected Creator Footer (Hidden from public visitors until unlocked) -->
+    <footer class="pt-4 pb-2 text-center space-y-2 border-t border-white/10">
+      <p class="text-[11px] text-slate-400 flex items-center justify-center gap-1.5">
+        <span>© 2026 <strong>@MJ.detourdiaries</strong> • Curated Budget Routes Across India 🇮🇳</span>
+        <button id="ownerLockBtn" type="button" title="Owner Login (@MJ.detourdiaries only)" class="text-[10px] text-slate-600 hover:text-amber-400 transition ml-1 px-1 py-0.5 rounded" aria-label="Owner Login">🔒</button>
+      </p>
+      <div id="creatorToolsFooter" class="hidden flex items-center justify-center flex-wrap gap-3 text-[11px] text-slate-400 pt-1">
+        <span class="px-2 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-[10px] font-bold text-emerald-300">🔓 Owner Unlocked</span>
+        <button id="openAdminBtn" type="button" class="hover:text-amber-400 underline transition">
+          ⚙️ Owner Link Setup
+        </button>
+        <span>•</span>
+        <button id="openDeployBtn" type="button" class="hover:text-emerald-400 underline transition">
+          🚀 Free Hosting Guide
+        </button>
+        <span>•</span>
+        <button id="lockOwnerBtn" type="button" class="text-rose-400 hover:text-rose-300 underline transition">
+          Lock
+        </button>
+      </div>
+    </footer>
+
     <!-- Toast Notification -->
     <div
       id="toastBox"
@@ -256,6 +261,11 @@
           <label class="block text-slate-400 mb-1" for="inputBookingUrl">Booking.com / Agoda Haveli Affiliate Link:</label>
           <input id="inputBookingUrl" type="url" value="https://www.booking.com/" class="w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2 text-white" />
         </div>
+        <div class="pt-2 border-t border-white/10">
+          <label class="block text-amber-300 font-semibold mb-1" for="inputNewOwnerPin">🔐 Change Owner Passcode (Optional):</label>
+          <input id="inputNewOwnerPin" type="password" placeholder="Leave blank to keep current (Default: MJ2026)" class="w-full rounded-lg bg-white/10 border border-white/20 px-3 py-2 text-white placeholder-slate-500" />
+          <p class="text-[10px] text-slate-400 mt-1">Only you can unlock Owner Link Setup & Free Hosting Guide with this passcode.</p>
+        </div>
       </div>
       <div class="flex items-center gap-2 pt-2">
         <button id="saveAdminLinksBtn" type="button" class="flex-1 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs hover:bg-amber-400">
@@ -279,6 +289,41 @@
       <button id="closeDeployBottomBtn" type="button" class="w-full py-2.5 rounded-xl bg-emerald-500 text-slate-950 font-bold text-xs">
         Got It
       </button>
+    </div>
+  </div>
+
+  <!-- Modal 4: Owner Passcode Verification Gate -->
+  <div id="pinGateModal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4 z-50">
+    <div class="glass-card max-w-xs w-full rounded-2xl p-5 space-y-4 border border-amber-500/30 bg-slate-900 text-center">
+      <div class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center mx-auto text-lg">
+        🔐
+      </div>
+      <div>
+        <h3 class="text-sm font-extrabold text-white">Owner Verification Required</h3>
+        <p class="text-[11px] text-slate-400 mt-1">Restricted to <strong class="text-amber-300">@MJ.detourdiaries</strong> admin only.</p>
+      </div>
+      <form id="pinGateForm" class="space-y-3" onsubmit="return false;">
+        <div>
+          <input
+            id="ownerPinInput"
+            type="password"
+            autocomplete="off"
+            placeholder="Enter Owner Passcode"
+            class="w-full rounded-xl bg-black/50 border border-white/20 px-3 py-2.5 text-center text-xs font-mono tracking-widest text-white placeholder-slate-500 focus:outline-none focus:border-amber-400"
+          />
+          <p id="pinErrorMsg" class="hidden text-[11px] text-rose-400 font-semibold mt-1.5">
+            ❌ Invalid passcode. Access denied.
+          </p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="cancelPinBtn" type="button" class="w-1/2 py-2.5 rounded-xl bg-white/10 text-slate-300 font-semibold text-xs hover:bg-white/20 transition">
+            Cancel
+          </button>
+          <button id="verifyPinBtn" type="submit" class="w-1/2 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-bold text-xs hover:bg-amber-400 transition">
+            Unlock
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -578,9 +623,105 @@
       mapPackModal.classList.remove("flex");
     });
 
+    // Owner Passcode Gate (Default passcode: "MJ2026", stored as hash so plain text isn't exposed)
+    const DEFAULT_PIN_HASH = "-2020644833";
+    let isOwnerUnlocked = false;
+    let pendingOwnerCallback = null;
+
+    function hashPasscode(str) {
+      let h = 0;
+      for (let i = 0; i < str.length; i++) {
+        h = ((h << 5) - h) + str.charCodeAt(i);
+        h |= 0;
+      }
+      return String(h);
+    }
+
+    function isValidPasscode(input) {
+      const cleaned = (input || "").trim();
+      let savedHash = DEFAULT_PIN_HASH;
+      try {
+        savedHash = localStorage.getItem("mj_owner_pin_hash") || DEFAULT_PIN_HASH;
+      } catch (e) {}
+      return hashPasscode(cleaned) === savedHash;
+    }
+
+    const pinGateModal = document.getElementById("pinGateModal");
+    const ownerPinInput = document.getElementById("ownerPinInput");
+    const pinErrorMsg = document.getElementById("pinErrorMsg");
+    const creatorToolsFooter = document.getElementById("creatorToolsFooter");
+
+    function requireOwnerAuth(callback) {
+      if (isOwnerUnlocked) {
+        if (callback) callback();
+        return;
+      }
+      pendingOwnerCallback = callback || null;
+      ownerPinInput.value = "";
+      pinErrorMsg.classList.add("hidden");
+      pinGateModal.classList.remove("hidden");
+      pinGateModal.classList.add("flex");
+      setTimeout(() => ownerPinInput.focus(), 50);
+    }
+
+    function closePinGate() {
+      pinGateModal.classList.add("hidden");
+      pinGateModal.classList.remove("flex");
+      pendingOwnerCallback = null;
+    }
+
+    document.getElementById("cancelPinBtn").addEventListener("click", closePinGate);
+
+    document.getElementById("pinGateForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (isValidPasscode(ownerPinInput.value)) {
+        isOwnerUnlocked = true;
+        creatorToolsFooter.classList.remove("hidden");
+        const cb = pendingOwnerCallback;
+        closePinGate();
+        showToast("🔓 Owner Mode Unlocked (@MJ.detourdiaries)");
+        if (cb) cb();
+      } else {
+        pinErrorMsg.classList.remove("hidden");
+        ownerPinInput.value = "";
+        ownerPinInput.focus();
+      }
+    });
+
+    // Trigger 1: Discreet Lock icon in footer
+    document.getElementById("ownerLockBtn").addEventListener("click", () => {
+      requireOwnerAuth(() => {
+        creatorToolsFooter.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+    });
+
+    // Trigger 2: 5 quick taps on @MJ.detourdiaries badge
+    let tapCount = 0;
+    let tapTimer = null;
+    document.getElementById("ownerSecretTrigger").addEventListener("click", () => {
+      tapCount += 1;
+      clearTimeout(tapTimer);
+      if (tapCount >= 5) {
+        tapCount = 0;
+        requireOwnerAuth();
+      } else {
+        tapTimer = setTimeout(() => { tapCount = 0; }, 1600);
+      }
+    });
+
+    // Lock Owner Mode button
+    document.getElementById("lockOwnerBtn").addEventListener("click", () => {
+      isOwnerUnlocked = false;
+      creatorToolsFooter.classList.add("hidden");
+      showToast("🔒 Owner links locked & hidden");
+    });
+
     document.getElementById("openAdminBtn").addEventListener("click", () => {
-      adminModal.classList.remove("hidden");
-      adminModal.classList.add("flex");
+      requireOwnerAuth(() => {
+        document.getElementById("inputNewOwnerPin").value = "";
+        adminModal.classList.remove("hidden");
+        adminModal.classList.add("flex");
+      });
     });
     document.getElementById("closeAdminBtn").addEventListener("click", () => {
       adminModal.classList.add("hidden");
@@ -588,8 +729,10 @@
     });
 
     document.getElementById("openDeployBtn").addEventListener("click", () => {
-      deployModal.classList.remove("hidden");
-      deployModal.classList.add("flex");
+      requireOwnerAuth(() => {
+        deployModal.classList.remove("hidden");
+        deployModal.classList.add("flex");
+      });
     });
     document.getElementById("closeDeployBtn").addEventListener("click", () => {
       deployModal.classList.add("hidden");
@@ -604,6 +747,7 @@
       const topmateUrl = document.getElementById("inputTopmateUrl").value.trim();
       const hostelUrl = document.getElementById("inputHostelUrl").value.trim();
       const bookingUrl = document.getElementById("inputBookingUrl").value.trim();
+      const newPin = document.getElementById("inputNewOwnerPin").value.trim();
 
       if (topmateUrl) document.getElementById("heroProductLink").href = topmateUrl;
       if (hostelUrl) document.getElementById("hostelAffiliateLink").href = hostelUrl;
@@ -611,11 +755,14 @@
 
       try {
         localStorage.setItem("india5k_links", JSON.stringify({ topmateUrl, hostelUrl, bookingUrl }));
+        if (newPin.length >= 4) {
+          localStorage.setItem("mj_owner_pin_hash", hashPasscode(newPin));
+        }
       } catch (e) {}
 
       adminModal.classList.add("hidden");
       adminModal.classList.remove("flex");
-      showToast("Updated your affiliate & product links!");
+      showToast(newPin.length >= 4 ? "✅ Links & new Owner Passcode saved!" : "✅ Updated your affiliate & product links!");
     });
 
     // Load saved custom links if available
